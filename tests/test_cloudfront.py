@@ -1,6 +1,6 @@
 from mock import patch
 
-from ..cloudfront import CloudFront, get_aws_config, read_aws_config
+from boto_aws_cloudfront.cloudfront import CloudFront, get_aws_config, read_aws_config
 
 class TestCloudFront:
 

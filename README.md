@@ -1,3 +1,5 @@
+[![CircleCI](https://circleci.com/gh/BerryCloud/boto-aws-cloudfront.svg?style=shield)](https://circleci.com/gh/BerryCloud/boto-aws-cloudfront)
+
 # Boto CloudFront wrapper
 
 This [boto3](https://github.com/boto/boto3) wrapper oversimplifies configuration
