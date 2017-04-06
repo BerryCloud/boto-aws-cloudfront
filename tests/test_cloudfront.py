@@ -208,6 +208,7 @@ class TestCloudFront:
             },
             {
                 'Id': 2,
+                'DomainName': 'ax334.cloudfront.net',
                 'Comment': 'static-cdn',
                 'Aliases': {
                     'Items': ['example.com'],
@@ -215,7 +216,6 @@ class TestCloudFront:
             },
         ]
         get_distro_config.return_value = {
-            'Id': 2,
             'Comment': 'static-cdn',
             'Aliases': {
                 'Items': ['example.com'],
@@ -224,6 +224,7 @@ class TestCloudFront:
 
         assert CloudFront().find_distro('static-cdn') == {
             'Id': 2,
+            'DomainName': 'ax334.cloudfront.net',
             'Comment': 'static-cdn',
             'Aliases': {
                 'Items': ['example.com'],

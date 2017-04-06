@@ -195,6 +195,7 @@ class CloudFront:
         if distro:
             config = self.get_distro_config(item.get('Id'))
             config['Id'] = distro['Id']
+            config['DomainName'] = distro['DomainName']
             return config
         return distro
 
