@@ -181,8 +181,38 @@ def read_aws_config(aws_config):
     return config
 
 class CloudFront:
-    def __init__(self):
+    def __init__(self, module):
+        self.module = module
+        if not HAS_BOTO3:
+            self.module.fail_json(msg="boto3 is required for this module")
         self.client = boto3.client('cloudfront')
+
+  @staticmethod
+  def define_module_argument_spec():
+    """
+    Defines the module's argument spec
+    :return: Dictionary defining module arguments
+    """
+    return dict(
+        name=dict(required=True, aliases=['stage_name']),
+        cache_forward_cookies_mode=dict(required=False),
+        cache_forward_querystring=dict(required=False),
+        cache_trusted_signers=dict(required=False),
+        certificate_arn=dict(required=False),
+        certificate_iam=dict(required=False),
+        certificate_source=dict(required=False),
+        enabled=dict(required=False),
+        http_version=dict(required=False),
+        https_behavior=dict(required=False),
+        ipv6=dict(required=False),
+        price_class=dict(
+            required=False,
+            choices=[
+                'PriceClass_100',
+                'PriceClass_All',
+            ]),
+        root_object=dict(required=False),
+    )
 
     def find_distro(self, name):
         list = self.get_all_distros()
@@ -234,4 +264,27 @@ class CloudFront:
         if self.did_distro_change(distro['DistributionConfig'], distro_config):
             self.update_distro(distro, distro_config)
             return 2
-        return 3
+        return 0
+
+    def process_request(self):
+        params = self.module.params
+        distro = None
+        result = None
+
+        if not self.module.check_mode:
+            result = self.ensure_distro_existence(self.module.params)
+
+        self.module.exit_json(changed=result > 0, distro=distro)
+
+
+def main():
+    module = AnsibleModule(
+        argument_spec=CloudFront.define_module_argument_spec(),
+        supports_check_mode=True
+    )
+    deployment = AnsibleModule(module)
+    deployment.process_request()
+
+from ansible.module_utils.basic import *  # pylint: disable=W0614
+if __name__ == '__main__':
+    main()
